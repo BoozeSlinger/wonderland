@@ -121,8 +121,8 @@ export default function TunnelScene() {
         end:   "18% top",
         scrub: true,
         onUpdate: (self) => {
-          gsap.set(elBar,   { opacity: 1 - self.progress });
-          gsap.set(elEarth, { opacity: self.progress });
+          if (elBar)   gsap.set(elBar,   { opacity: 1 - self.progress });
+          if (elEarth) gsap.set(elEarth, { opacity: self.progress });
         },
       });
 
@@ -133,8 +133,8 @@ export default function TunnelScene() {
         end:   "38% top",
         scrub: true,
         onUpdate: (self) => {
-          gsap.set(elEarth, { opacity: 1 - self.progress });
-          gsap.set(elBrick, { opacity: self.progress });
+          if (elEarth) gsap.set(elEarth, { opacity: 1 - self.progress });
+          if (elBrick) gsap.set(elBrick, { opacity: self.progress });
         },
       });
 
@@ -145,8 +145,8 @@ export default function TunnelScene() {
         end:   "57% top",
         scrub: true,
         onUpdate: (self) => {
-          gsap.set(elBrick,   { opacity: 1 - self.progress });
-          gsap.set(elShelves, { opacity: self.progress });
+          if (elBrick)   gsap.set(elBrick,   { opacity: 1 - self.progress });
+          if (elShelves) gsap.set(elShelves, { opacity: self.progress });
         },
       });
 
@@ -157,8 +157,8 @@ export default function TunnelScene() {
         end:   "77% top",
         scrub: true,
         onUpdate: (self) => {
-          gsap.set(elShelves,   { opacity: 1 - self.progress });
-          gsap.set(elWallpaper, { opacity: self.progress });
+          if (elShelves)   gsap.set(elShelves,   { opacity: 1 - self.progress });
+          if (elWallpaper) gsap.set(elWallpaper, { opacity: self.progress });
         },
       });
 
