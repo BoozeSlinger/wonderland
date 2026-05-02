@@ -1,26 +1,339 @@
 @import "tailwindcss";
 
+/* ═══════════════════════════════════
+   CSS VARIABLES
+════════════════════════════════════ */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --black:    #000000;
+  --void:     #0D0D0D;
+  --charcoal: #2A2A2A;
+  --burgundy: #1a0500;
+  --amber:    #C8780A;
+  --depth:    8000px;
+  --font-display: "le murmure", "LeMurmure", serif;
+  --font-body: "Big Shoulders Display", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ═══════════════════════════════════
+   RESET + BASE
+════════════════════════════════════ */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+html,
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  width: 100%;
+  background: var(--black);
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════
+   LAYER 0 — VOID
+════════════════════════════════════ */
+#layer-void {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: radial-gradient(ellipse at center, #1a0500 0%, #000000 65%);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   PARALLAX LAYER BASE
+   Fixed container, tall inner div
+════════════════════════════════════ */
+.parallax-layer {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.parallax-layer .inner {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 16000px;
+  will-change: transform;
+}
+
+/* ═══════════════════════════════════
+   TEXTURE LAYERS
+════════════════════════════════════ */
+.texture-layer .inner {
+  background-repeat: repeat-y;
+  background-size: cover;
+  background-position: center top;
+}
+
+#layer-bar       { z-index: 1; }
+#layer-earth     { z-index: 2; }
+#layer-brick     { z-index: 3; }
+#layer-shelves   { z-index: 4; }
+#layer-wallpaper { z-index: 5; }
+
+#layer-bar       .inner { background-image: url("/assets/textures/bar-interior.png");   background-color: #1a0500; }
+#layer-earth     .inner { background-image: url("/assets/textures/earth-roots.png");    background-color: #0d0a00; }
+#layer-brick     .inner { background-image: url("/assets/textures/stone-brick.png");    background-color: #1a1008; }
+#layer-shelves   .inner { background-image: url("/assets/textures/shelves-jars.png");   background-color: #0d0800; }
+#layer-wallpaper .inner { background-image: url("/assets/textures/wallpaper.png");      background-color: #160c00; }
+
+/* ═══════════════════════════════════
+   LAYER 6 — WALL DECORATIONS
+════════════════════════════════════ */
+#layer-frames { z-index: 6; }
+
+.wall-decor {
+  position: absolute;
+  opacity: 0.85;
+  filter: drop-shadow(0 4px 16px rgba(0, 0, 0, 0.9));
+}
+
+/* ═══════════════════════════════════
+   LAYER 7 — FLOATING OBJECTS
+════════════════════════════════════ */
+#layer-objects { z-index: 7; }
+
+.float-obj {
+  position: absolute;
+  will-change: transform, opacity;
+  animation: objectGlow 6s ease-in-out infinite alternate;
+}
+
+/* Opacity-only pulse — no filter, stays on compositor */
+@keyframes objectGlow {
+  0%   { opacity: 0.78; }
+  100% { opacity: 0.95; }
+}
+
+/* ═══════════════════════════════════
+   LAYER 8 — TEXT ZONES
+════════════════════════════════════ */
+#layer-text {
+  z-index: 23;
+  pointer-events: none;
+}
+
+.text-zone {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(580px, 85vw);
+  text-align: center;
+  color: var(--amber);
+  opacity: 0;
+  will-change: transform, opacity;
+}
+
+.text-zone h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 3.2rem);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 1rem;
+  text-shadow: 0 0 40px rgba(200, 120, 10, 0.4);
+}
+
+.text-zone h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3.5vw, 2.2rem);
+  font-weight: 400;
+  line-height: 1.2;
+  margin-bottom: 0.8rem;
+  text-shadow: 0 0 30px rgba(200, 120, 10, 0.3);
+}
+
+.text-zone p {
+  font-family: var(--font-body);
+  font-size: clamp(0.9rem, 2vw, 1.1rem);
+  opacity: 0.72;
+  line-height: 1.6;
+  color: var(--amber);
+}
+
+/* ═══════════════════════════════════
+   OFFER CARDS
+════════════════════════════════════ */
+.offer-cards {
+  display: flex;
+  gap: 1.5rem;
+  margin: 2rem 0;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.offer-card {
+  border: 1px solid rgba(200, 120, 10, 0.5);
+  padding: 1.5rem 2rem;
+  min-width: 160px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  background: rgba(10, 5, 0, 0.72);
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: var(--amber);
+  opacity: 0.85;
+}
+
+.card-price {
+  font-family: var(--font-body);
+  font-size: 1.5rem;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.cta-btn {
+  display: inline-block;
+  margin-top: 1.5rem;
+  padding: 1rem 3rem;
+  background: var(--amber);
+  color: var(--black);
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: 1rem;
+  text-decoration: none;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border-radius: 2px;
+  transition: background 0.2s, transform 0.1s;
+  pointer-events: auto;
+  cursor: pointer;
+}
+
+.cta-btn:hover {
+  background: #e08c0f;
+  transform: translateY(-1px);
+}
+
+/* ═══════════════════════════════════
+   LAYER 9 — NEON SIGNS
+════════════════════════════════════ */
+#layer-neon { z-index: 9; }
+
+.neon-sign {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  mix-blend-mode: screen;
+  max-width: 600px;
+  width: 55%;
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════
+   LAYER 10 — SECONDARY CHARACTERS
+════════════════════════════════════ */
+#layer-characters { z-index: 10; }
+
+#char-lou,
+#char-static {
+  position: absolute;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+/* ═══════════════════════════════════
+   TVTENDER — FIXED, NEVER SCROLLS
+════════════════════════════════════ */
+#tvtender {
+  position: fixed;
+  bottom: 12%;
+  left: 50%;
+  transform: translateX(-50%) rotate(-35deg);
+  width: 260px;
+  z-index: 22;
+  pointer-events: none;
+  will-change: transform;
+  animation: tvSway 4s ease-in-out infinite;
+}
+
+@keyframes tvSway {
+  0%   { transform: translateX(-50%) rotate(-35deg) translateY(0px); }
+  25%  { transform: translateX(-50%) rotate(-33deg) translateY(-10px); }
+  50%  { transform: translateX(-50%) rotate(-35deg) translateY(-18px); }
+  75%  { transform: translateX(-50%) rotate(-37deg) translateY(-10px); }
+  100% { transform: translateX(-50%) rotate(-35deg) translateY(0px); }
+}
+
+/* ═══════════════════════════════════
+   TUNNEL RIM — FIXED FOREGROUND
+════════════════════════════════════ */
+#tunnel-rim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  object-fit: cover;
+  z-index: 20;
+  pointer-events: none;
+  mix-blend-mode: multiply;
+  opacity: 0.85;
+}
+
+/* ═══════════════════════════════════
+   ATMOSPHERE — ALWAYS ON TOP
+════════════════════════════════════ */
+#atmosphere {
+  position: fixed;
+  inset: 0;
+  z-index: 99;
+  pointer-events: none;
+}
+
+.atmo-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 28%,
+    rgba(0, 0, 0, 0.55) 65%,
+    rgba(0, 0, 0, 0.9) 100%
+  );
+}
+
+.atmo-scanlines {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.04) 3px,
+    rgba(0, 0, 0, 0.04) 4px
+  );
+}
+
+.atmo-grain {
+  position: absolute;
+  inset: 0;
+  opacity: 0.06;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  background-size: 256px 256px;
+}
+
+/* ═══════════════════════════════════
+   MOBILE
+════════════════════════════════════ */
+@media (max-width: 768px) {
+  .float-obj   { display: none; }
+  #char-lou    { display: none; }
+  #tvtender    { width: 160px; bottom: 8%; }
+  .offer-cards { flex-direction: column; align-items: center; }
+  .offer-card  { min-width: 240px; }
 }
